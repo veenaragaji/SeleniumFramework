@@ -12,6 +12,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -21,6 +22,8 @@ import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.google.common.base.Utf8;
 import com.mongodb.internal.connection.Time;
 
+import customListeners.WebEventListener;
+
 public class BaseClass {
 	public static WebDriver driver ;
 	public Properties prop;
@@ -29,6 +32,8 @@ public class BaseClass {
 	public static ExtentTest test;
 	public static ExtentTest features;
 	public static ExtentTest scenarios;
+	WebEventListener weblistener;
+	EventFiringWebDriver e_driver;
 	
 	
 	public WebDriver getDriverConfig() throws IOException{
@@ -51,7 +56,10 @@ public class BaseClass {
 			
 		}
 		driver.manage().window().maximize();
-		
+		e_driver=new EventFiringWebDriver(driver);
+		weblistener=new WebEventListener();
+		e_driver.register(weblistener);
+		driver=e_driver;
 		
 		return driver;
 	}
